@@ -24,11 +24,12 @@ mongoose.connect('mongodb+srv://echadaniyassine:yassine12301@cluster1.s91px.mong
 
 
 app.use(express.json());
-app.use(cors(
-  origin : ["https://my-react-app-kappa-ten.vercel.app"],
-  methods : ["Post","Get"],
-  credentiels : ["true"]
-));
+// Correct CORS configuration
+app.use(cors({
+  origin: "https://my-react-app-kappa-ten.vercel.app", // Origin allowed to make requests
+  methods: ["POST", "GET"], // Allowed methods
+  credentials: true // Allow cookies or credentials to be sent
+}));
 
 let transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
