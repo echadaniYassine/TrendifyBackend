@@ -26,10 +26,12 @@ mongoose.connect('mongodb+srv://echadaniyassine:yassine12301@cluster1.s91px.mong
 app.use(express.json());
 // Correct CORS configuration
 app.use(cors({
-  origin: "https://my-react-app-six-jet.vercel.app", // Your frontend's origin
-  methods: ["GET", "POST", "PUT"], // Allowed methods
-  credentials: true // Enable credentials like cookies
+  origin: ["https://my-react-app-six-jet.vercel.app"], // Your frontend's origin
+  methods: ["GET", "POST", "PUT", "OPTIONS"], // Ensure OPTIONS is included for preflight
+  credentials: true, // Allow credentials (cookies, tokens)
+  allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
 }));
+
 
 let transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
