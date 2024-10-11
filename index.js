@@ -25,7 +25,7 @@ mongoose.connect('mongodb+srv://echadaniyassine:yassine12301@cluster1.s91px.mong
 
 app.use(express.json());
 app.use(cors(
-  origin : ["https://my-react-app-kappa-ten.vercel.app/"],
+  origin : ["https://my-react-app-kappa-ten.vercel.app"],
   methods : ["Post","Get"],
   credentiels : ["true"]
 ));
