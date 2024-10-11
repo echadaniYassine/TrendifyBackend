@@ -15,7 +15,7 @@ const PORT = process.env.PORT_ONE || 4002;
 console.log('Server starting...');
 
 // Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/auth-service')
+mongoose.connect('mongodb+srv://echadaniyassine:yassine12301@cluster1.s91px.mongodb.net/Cluster1?retryWrites=true&w=majority&appName=Cluster1/auth-service')
   .then(() => console.log('Connected to MongoDB'))
   .catch((error) => {
     console.error('Failed to connect to MongoDB:', error);
@@ -24,7 +24,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/auth-service')
 
 
 app.use(express.json());
-app.use(cors());
+app.use(cors(
+  origin : ["https://my-react-app-kappa-ten.vercel.app"],
+  methods : ["Post","Get"],
+  credentiels : ["true"]
+));
 
 let transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
