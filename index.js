@@ -4,49 +4,39 @@ const userRoutes = require('./routes/TrendifyAuthRoutes');
 const routerProduct = require('./routes/productsRoutes');
 const routerCategory = require('./routes/CategoriesRoutes');
 const routerAdmin = require('./routes/admin/adminRoutes');
-const orderRoutes = require('./routes/OrderRoutes'); // Path to your routes file
-
+const orderRoutes = require('./routes/OrderRoutes'); 
 const helmet = require('helmet');
 const dotenv = require('dotenv');
-const connectDB =require("./config/db")
+const connectDB = require("./config/db");
+const mongoose = require('mongoose'); // Required for Mongoose connection
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4002;
 console.log('Server starting...');
 
-// Connect to MongoDB
-<<<<<<< HEAD
+// Connect to MongoDB (use only one method)
 connectDB();
 
-app.use(cors());
+// CORS configuration
+app.use(cors({
+  origin: ["https://my-react-app-six-jet.vercel.app"], // Your frontend's origin
+  methods: ["GET", "POST", "PUT", "OPTIONS"], 
+  credentials: true, // Allow credentials (cookies, tokens)
+  allowedHeaders: ["Content-Type", "Authorization"], 
+}));
+
+// Security middleware
 app.use(helmet());
 app.use(express.json());
+
+// Define your routes
 app.use('/api/Trendify', userRoutes);
 app.use('/api/Trendify/Products', routerProduct);
 app.use('/api/Trendify/Category', routerCategory);
 app.use('/api/Trendify/Admin', routerAdmin);
 app.use('/api/Trendify/orders', orderRoutes);
-=======
-mongoose.connect('mongodb+srv://echadaniyassine:yassine12301@cluster1.s91px.mongodb.net/Cluster1?retryWrites=true&w=majority&appName=Cluster1/auth-service')
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((error) => {
-    console.error('Failed to connect to MongoDB:', error);
-    process.exit(1);
-  });
-
-
-app.use(express.json());
-// Correct CORS configuration
-app.use(cors({
-  origin: ["https://my-react-app-six-jet.vercel.app"], // Your frontend's origin
-  methods: ["GET", "POST", "PUT", "OPTIONS"], // Ensure OPTIONS is included for preflight
-  credentials: true, // Allow credentials (cookies, tokens)
-  allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
-}));
-
->>>>>>> c1ca49056e855a8d2ce85626e5826022167a56b5
-
 
 // Handle 404 errors
 app.use((req, res) => {
@@ -59,6 +49,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal Server Error' });
 });
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
