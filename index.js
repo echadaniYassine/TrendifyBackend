@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const userRoutes = require('./routes/TrendifyAuthRoutes');
 const routerProduct = require('./routes/productsRoutes');
 const routerCategory = require('./routes/CategoriesRoutes');
@@ -8,7 +7,6 @@ const orderRoutes = require('./routes/OrderRoutes');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
 const connectDB = require("./config/db");
-const mongoose = require('mongoose'); // Required for Mongoose connection
 
 dotenv.config();
 
@@ -19,13 +17,7 @@ console.log('Server starting...');
 // Connect to MongoDB (use only one method)
 connectDB();
 
-// CORS configuration
-app.use(cors({
-  origin: ["https://my-react-app-six-jet.vercel.app"], // Your frontend's origin
-  methods: ["GET", "POST", "PUT", "OPTIONS"], 
-  credentials: true, // Allow credentials (cookies, tokens)
-  allowedHeaders: ["Content-Type", "Authorization"], 
-}));
+
 
 // Security middleware
 app.use(helmet());
