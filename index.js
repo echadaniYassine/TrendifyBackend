@@ -5,6 +5,7 @@ const routerCategory = require('./routes/CategoriesRoutes');
 const routerAdmin = require('./routes/admin/adminRoutes');
 const orderRoutes = require('./routes/OrderRoutes'); 
 const helmet = require('helmet');
+const cors = require('cors'); 
 const dotenv = require('dotenv');
 const connectDB = require("./config/db");
 
@@ -22,6 +23,13 @@ connectDB();
 // Security middleware
 app.use(helmet());
 app.use(express.json());
+
+// Enable CORS
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow requests from this origin
+  methods: ['GET', 'POST', 'PATCH' , 'PUT', 'DELETE'], // Allowed HTTP methods
+  credentials: true // Allow cookies and credentials
+}));
 
 // Define your routes
 app.use('/api/Trendify', userRoutes);

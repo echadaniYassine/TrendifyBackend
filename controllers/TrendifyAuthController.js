@@ -41,28 +41,37 @@ exports.register = async (req, res) => {
   }
 };
 
+
+
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
+    // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found with email:', email);
       return res.status(404).json({ message: 'User not found' });
     }
+
+    // Validate password
     const isPasswordValid = await bcrypt.compare(password.trim(), user.password);
     if (!isPasswordValid) {
-      console.log('Password comparison failed');
+      console.log('Password comparison failed for user:', email);
       return res.status(401).json({ message: 'Incorrect password' });
     }
 
+    // Generate JWT token
     const token = generateToken(user._id);
-    console.log("Generated Token:", token);
+    console.log('Generated Token:', token); // Debug: Ensure token is generated correctly
 
+    // Respond with token
     return res.status(200).json({
-      message: "Login successful, have fun!",
-      token: token
+      message: 'Login successful, have fun!',
+      token: token,
     });
   } catch (error) {
-    console.error('Error during login:', error);
+    console.error('Error during login:', error); // Debug: Catch any errors in the process
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
