@@ -5,22 +5,18 @@ const jwt = require('jsonwebtoken'); // Add this line
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-// Create a transporter object using the default SMTP transport
 let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-        user: 'yassinechadani113@gmail.com',
-        pass: 'thurwsxohxrpsrjx', // Your App Password from environment variable
+        user: 'yassinechadani113@gmail.com', // Your Gmail address
+        pass: 'mqimunubsdwzwbmw', // Your App Password
     },
     tls: {
         rejectUnauthorized: false,
     },
 });
-
-
-
 
 exports.register = async (req, res) => {
   try {
@@ -151,46 +147,45 @@ exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+      const user = await User.findOne({ email });
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
 
-    // Generate a random verification code
-    const verificationCode = Math.floor(100000 + Math.random() * 900000);
+      // Generate a random verification code
+      const verificationCode = Math.floor(100000 + Math.random() * 900000);
 
-    // Generate a secure token
-    const resetToken = crypto.randomBytes(20).toString('hex');
+      // Generate a secure token
+      const resetToken = crypto.randomBytes(20).toString('hex');
 
-    // Set the verification code and expiration time in the user document
-    user.verificationCode = verificationCode;
-    user.resetPasswordToken = resetToken; // Use crypto for generating the token
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+      // Set the verification code and expiration time in the user document
+      user.verificationCode = verificationCode;
+      user.resetPasswordToken = resetToken; // Use crypto for generating the token
+      user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-    await user.save(); // Save changes to the database
+      await user.save(); // Save changes to the database
 
-    return res.json({ message: 'Verification code sent successfully.', token: resetToken });
+      console.log('Generated token:', resetToken);
 
-    console.log('Generated token:', resetToken);
+      // Mail options for Nodemailer
+      const mailOptions = {
+          from: process.env.EMAIL, // Use environment variable for sender's email
+          to: email,
+          subject: 'Password Reset Verification Code',
+          text: `Dear User,\n\nYou have requested to reset your password. Here is your verification code: ${verificationCode}\n\n` +
+              `Your reset token is: ${resetToken}\n\n` +
+              `If you did not request this change, please ignore this email.\n\nBest regards,\nThe Support Team`,
+      };
 
-    // Mail options for Nodemailer
-    const mailOptions = {
-      from: process.env.EMAIL, // Use environment variable
-      to: email,
-      subject: 'Password Reset Verification Code',
-      text: `Dear User,\n\nYou have requested to reset your password. Here is your verification code: ${verificationCode}\n\n` +
-        `Your reset token is: ${user.resetPasswordToken}\n\n` +
-        `If you did not request this change, please ignore this email.\n\nBest regards,\nThe Support Team`,
-    };
+      // Send the email
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Email sent successfully:', info.response);
 
-    // Send the email
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', info.response);
-    return res.json({ message: 'Verification code sent successfully.' });
+      return res.json({ message: 'Verification code sent successfully.', token: resetToken });
 
   } catch (error) {
-    console.error('Error in forgot password process:', error);
-    return res.status(500).json({ message: 'Error in forgot password process.', error: error.message });
+      console.error('Error in forgot password process:', error);
+      return res.status(500).json({ message: 'Error in forgot password process.', error: error.message });
   }
 };
 

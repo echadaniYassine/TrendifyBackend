@@ -297,9 +297,9 @@ const ProductsData = [
 ];
 
 const CategoriesData = [
-  { id:1, categoryName: "All", img: "/assets/all.jpg", subcategories: [] },
-  { id:2, categoryName: "Men", img: "/assets/men.jpg", subcategories: ["Hoodies", "Jackets", "Shirts", "Pants"] },
-  { id:3, categoryName: "Women", img: "/assets/women.jpg", subcategories: ["Hoodies", "Jackets", "Shirts", "Pants"] },
+  { id:1, categoryName: "All", img: "/assets/categoryimg/all.png", subcategories: [] },
+  { id:2, categoryName: "Men", img: "/assets/categoryimg/man.png", subcategories: ["Hoodies", "Jackets", "Shirts", "Pants"] },
+  { id:3, categoryName: "Women", img: "/assets/categoryimg/women.png", subcategories: ["Hoodies", "Jackets", "Shirts", "Pants"] },
 ];
 module.exports = ProductsData;
-
+module.exports = CategoriesData;
