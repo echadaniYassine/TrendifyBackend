@@ -3,7 +3,7 @@ const userRoutes = require('./routes/TrendifyAuthRoutes');
 const routerProduct = require('./routes/productsRoutes');
 const routerCategory = require('./routes/CategoriesRoutes');
 const routerAdmin = require('./routes/admin/adminRoutes');
-const orderRoutes = require('./routes/OrderRoutes'); 
+const orderRouter = require('./routes/OrderRoutes'); // Adjust path if necessary
 const helmet = require('helmet');
 const cors = require('cors'); 
 const dotenv = require('dotenv');
@@ -36,7 +36,7 @@ app.use('/api/Trendify', userRoutes);
 app.use('/api/Trendify/Products', routerProduct);
 app.use('/api/Trendify/Category', routerCategory);
 app.use('/api/Trendify/Admin', routerAdmin);
-app.use('/api/Trendify/orders', orderRoutes);
+app.use('/api/Trendify/orders', orderRouter);
 
 // Handle 404 errors
 app.use((req, res) => {

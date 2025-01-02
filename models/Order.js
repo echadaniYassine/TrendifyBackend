@@ -11,8 +11,7 @@ const orderItemSchema = new mongoose.Schema({
 // Order Schema
 const orderSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'TrendifyUser ', required: true },
-    username: { type: String, ref: 'TrendifyUser', required: true },  // Corrected to String
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'TrendifyUser', required: true },
     items: [orderItemSchema],
     totalAmount: { type: Number, required: true },
     orderStatus: {

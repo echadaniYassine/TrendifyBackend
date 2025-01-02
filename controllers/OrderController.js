@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product'); // Assuming you have the Product model
 const User = require('../models/TrendifyUserAuth'); // Assuming you have the User model
+const jwt = require('jsonwebtoken'); // Add this line to import the jsonwebtoken library
 
 // Create a new order
 exports.createOrder = async (req, res) => {
@@ -106,5 +107,27 @@ exports.updateOrderStatus = async (req, res) => {
   } catch (error) {
     console.error('Error updating order status:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.getUserOrders = async (req, res) => {
+  try {
+    console.log('Fetching orders for user...'); // Debugging log
+    const token = req.headers.authorization.split(' ')[1]; // Extract token
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Decode token
+    const userId = decoded.id; // Extract userId from token
+    // Fetch orders for the user
+    const orders = await Order.find({ userId });
+    if (orders.length === 0) {
+      return res.status(404).json({ message: 'No orders found for this user' });
+    }
+    return res.status(200).json(orders);
+
+  } catch (error) {
+    console.error('Error fetching user orders:', error);
+    return res.status(500).json({ message: 'Server error' });
   }
 };

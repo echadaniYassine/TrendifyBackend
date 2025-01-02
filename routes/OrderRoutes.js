@@ -1,17 +1,20 @@
 const express = require('express');
-const Orderrouter = express.Router();
+const orderRouter = express.Router();
 const orderController = require('../controllers/OrderController');
 
 // Route to create a new order
-Orderrouter.post('/createOrder', orderController.createOrder);
+orderRouter.post('/createOrder', orderController.createOrder);
 
 // Route to fetch all orders
-Orderrouter.get('/getAllOrders', orderController.getAllOrders);
+orderRouter.get('/getAllOrders', orderController.getAllOrders);
 
 // Route to fetch an order by ID
-Orderrouter.get('/getOrderById/:orderId', orderController.getOrderById);
+orderRouter.get('/getOrderById/:orderId', orderController.getOrderById);
 
 // Route to update order status
-Orderrouter.patch('/updateOrderStatus/:orderId/status', orderController.updateOrderStatus);
+orderRouter.patch('/updateOrderStatus/:orderId/status', orderController.updateOrderStatus);
 
-module.exports = Orderrouter;
+orderRouter.get('/getUserOrders', orderController.getUserOrders);
+
+
+module.exports = orderRouter;
