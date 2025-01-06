@@ -10,6 +10,7 @@ const dotenv = require('dotenv');
 const connectDB = require("./config/db");
 const paymentRoutes = require('./routes/paymentRoutes');
 const cookieParser = require('cookie-parser');
+const feedbackRoutes = require('./routes/feedbackRoutes');
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use('/api/Trendify/Category', routerCategory);
 app.use('/api/Trendify/Admin', routerAdmin);
 app.use('/api/Trendify/orders', orderRouter);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/Trendify/feedback', feedbackRoutes);
 
 
 // Handle 404 errors
