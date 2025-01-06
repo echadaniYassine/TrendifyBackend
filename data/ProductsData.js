@@ -1,7 +1,6 @@
 const ProductsData = [
   // Men Category
   {
-    id: 1,
     categoryName: "Men",
     subcategory: "Hoodies",
     name: "Hoody for Men - Style 1",
@@ -10,7 +9,6 @@ const ProductsData = [
     description: "Stylish and comfortable hoody perfect for casual outings.",
   },
   {
-    id: 2,
     categoryName: "Men",
     subcategory: "Hoodies",
     name: "Hoody for Men - Style 2",
@@ -19,7 +17,6 @@ const ProductsData = [
     description: "Trendy hoody that combines style and comfort for everyday wear.",
   },
   {
-    id: 3,
     categoryName: "Men",
     subcategory: "Hoodies",
     name: "Hoody for Men - Style 3",
@@ -28,7 +25,6 @@ const ProductsData = [
     description: "Lightweight hoody ideal for layering during cooler months.",
   },
   {
-    id: 4,
     categoryName: "Men",
     featured: true,
     subcategory: "Hoodies",
@@ -38,7 +34,6 @@ const ProductsData = [
     description: "Classic hoody that adds a touch of sophistication to any outfit.",
   },
   {
-    id: 5,
     categoryName: "Men",
     subcategory: "Jackets",
     name: "Jacket for Men - Style 1",
@@ -47,7 +42,6 @@ const ProductsData = [
     description: "Stylish and comfortable jacket perfect for casual outings.",
   },
   {
-    id: 6,
     categoryName: "Men",
     subcategory: "Jackets",
     featured: true,
@@ -57,7 +51,6 @@ const ProductsData = [
     description: "Trendy jacket that combines style and comfort for everyday wear.",
   },
   {
-    id: 7,
     categoryName: "Men",
     subcategory: "Jackets",
     name: "Jacket for Men - Style 3",
@@ -66,7 +59,6 @@ const ProductsData = [
     description: "Lightweight jacket ideal for layering during cooler months.",
   },
   {
-    id: 8,
     categoryName: "Men",
     subcategory: "Jackets",
     name: "Jacket for Men - Style 4",
@@ -75,7 +67,6 @@ const ProductsData = [
     description: "Classic jacket that adds a touch of sophistication to any outfit.",
   },
   {
-    id: 9,
     categoryName: "Men",
     subcategory: "Shirts",
     name: "Shirt for Men - Style 1",
@@ -84,7 +75,6 @@ const ProductsData = [
     description: "Stylish and comfortable shirt perfect for casual outings.",
   },
   {
-    id: 10,
     categoryName: "Men",
     subcategory: "Shirts",
     name: "Shirt for Men - Style 2",
@@ -93,7 +83,6 @@ const ProductsData = [
     description: "Trendy shirt that combines style and comfort for everyday wear.",
   },
   {
-    id: 11,
     categoryName: "Men",
     subcategory: "Shirts",
     name: "Shirt for Men - Style 3",
@@ -102,7 +91,6 @@ const ProductsData = [
     description: "Lightweight shirt ideal for layering during cooler months.",
   },
   {
-    id: 12,
     categoryName: "Men",
     subcategory: "Shirts",
     name: "Shirt for Men - Style 4",
@@ -111,7 +99,6 @@ const ProductsData = [
     description: "Classic shirt that adds a touch of sophistication to any outfit.",
   },
   {
-    id: 13,
     categoryName: "Men",
     subcategory: "Pants",
     name: "Pants for Men - Style 1",
@@ -120,7 +107,6 @@ const ProductsData = [
     description: "Stylish and comfortable pants perfect for casual outings.",
   },
   {
-    id: 14,
     categoryName: "Men",
     subcategory: "Pants",
     name: "Pants for Men - Style 2",
@@ -129,7 +115,6 @@ const ProductsData = [
     description: "Trendy pants that combine style and comfort for everyday wear.",
   },
   {
-    id: 15,
     categoryName: "Men",
     subcategory: "Pants",
     name: "Pants for Men - Style 3",
@@ -138,7 +123,6 @@ const ProductsData = [
     description: "Lightweight pants ideal for layering during cooler months.",
   },
   {
-    id: 16,
     categoryName: "Men",
     subcategory: "Pants",
     name: "Pants for Men - Style 4",
@@ -149,7 +133,6 @@ const ProductsData = [
 
   // Women Category
   {
-    id: 17,
     categoryName: "Women",
     subcategory: "Hoodies",
     name: "Hoody for Women - Style 1",
@@ -158,7 +141,6 @@ const ProductsData = [
     description: "Stylish and comfortable hoody perfect for casual outings.",
   },
   {
-    id: 18,
     categoryName: "Women",
     subcategory: "Hoodies",
     name: "Hoody for Women - Style 2",
@@ -167,7 +149,6 @@ const ProductsData = [
     description: "Trendy hoody that combines style and comfort for everyday wear.",
   },
   {
-    id: 19,
     categoryName: "Women",
     subcategory: "Hoodies",
     name: "Hoody for Women - Style 3",
@@ -176,7 +157,6 @@ const ProductsData = [
     description: "Lightweight hoody ideal for layering during cooler months.",
   },
   {
-    id: 20,
     categoryName: "Women",
     subcategory: "Hoodies",
     name: "Hoody for Women - Style 4",
@@ -185,7 +165,6 @@ const ProductsData = [
     description: "Classic hoody that adds a touch of sophistication to any outfit.",
   },
   {
-    id: 21,
     categoryName: "Women",
     subcategory: "Jackets",
     name: "Jacket for Women - Style 1",
@@ -194,7 +173,6 @@ const ProductsData = [
     description: "Stylish and comfortable jacket perfect for casual outings.",
   },
   {
-    id: 22,
     categoryName: "Women",
     subcategory: "Jackets",
     name: "Jacket for Women - Style 2",
@@ -203,7 +181,6 @@ const ProductsData = [
     description: "Trendy jacket that combines style and comfort for everyday wear.",
   },
   {
-    id: 23,
     categoryName: "Women",
     subcategory: "Jackets",
     name: "Jacket for Women - Style 3",
@@ -212,7 +189,6 @@ const ProductsData = [
     description: "Lightweight jacket ideal for layering during cooler months.",
   },
   {
-    id: 24,
     categoryName: "Women",
     subcategory: "Jackets",
     name: "Jacket for Women - Style 4",
@@ -221,7 +197,6 @@ const ProductsData = [
     description: "Classic jacket that adds a touch of sophistication to any outfit.",
   },
   {
-    id: 25,
     categoryName: "Women",
     subcategory: "Shirts",
     name: "Shirt for Women - Style 1",
@@ -230,7 +205,6 @@ const ProductsData = [
     description: "Stylish and comfortable shirt perfect for casual outings.",
   },
   {
-    id: 26,
     categoryName: "Women",
     subcategory: "Shirts",
     name: "Shirt for Women - Style 2",
@@ -239,7 +213,6 @@ const ProductsData = [
     description: "Trendy shirt that combines style and comfort for everyday wear.",
   },
   {
-    id: 27,
     categoryName: "Women",
     subcategory: "Shirts",
     name: "Shirt for Women - Style 3",
@@ -248,17 +221,15 @@ const ProductsData = [
     description: "Lightweight shirt ideal for layering during cooler months.",
   },
   {
-    id: 28,
     categoryName: "Women",
-    subcategory: "Shirts",
     featured: true,
+    subcategory: "Shirts",
     name: "Shirt for Women - Style 4",
     price: 25.99,
     img: "/assets/Women/Shirts/Shirts4.jpg",
-    description: "Classic shirt that adds a touch of sophistication to any outfit.",
+    description : "Classic shirt that adds a touch of sophistication to any outfit.",
   },
   {
-    id: 29,
     categoryName: "Women",
     subcategory: "Pants",
     name: "Pants for Women - Style 1",
@@ -267,7 +238,6 @@ const ProductsData = [
     description: "Stylish and comfortable pants perfect for casual outings.",
   },
   {
-    id: 30,
     categoryName: "Women",
     subcategory: "Pants",
     name: "Pants for Women - Style 2",
@@ -276,7 +246,6 @@ const ProductsData = [
     description: "Trendy pants that combine style and comfort for everyday wear.",
   },
   {
-    id: 31,
     categoryName: "Women",
     subcategory: "Pants",
     name: "Pants for Women - Style 3",
@@ -285,7 +254,6 @@ const ProductsData = [
     description: "Lightweight pants ideal for layering during cooler months.",
   },
   {
-    id: 32,
     categoryName: "Women",
     featured: true,
     subcategory: "Pants",
@@ -296,10 +264,5 @@ const ProductsData = [
   },
 ];
 
-const CategoriesData = [
-  { id:1, categoryName: "All", img: "/assets/categoryimg/all.png", subcategories: [] },
-  { id:2, categoryName: "Men", img: "/assets/categoryimg/man.png", subcategories: ["Hoodies", "Jackets", "Shirts", "Pants"] },
-  { id:3, categoryName: "Women", img: "/assets/categoryimg/women.png", subcategories: ["Hoodies", "Jackets", "Shirts", "Pants"] },
-];
+
 module.exports = ProductsData;
-module.exports = CategoriesData;

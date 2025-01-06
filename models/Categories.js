@@ -1,10 +1,9 @@
-// models/Category.js
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
-  categoryName: { type: String, required: true },
+  categoryName: { type: String, required: true, unique: true },
   img: { type: String, required: true },
-  subcategories: [String], // Array of subcategory names
+  subcategories: { type: [String], default: [] },
 });
 
 const Category = mongoose.model('Category', categorySchema);

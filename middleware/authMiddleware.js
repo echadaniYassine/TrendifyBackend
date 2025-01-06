@@ -13,8 +13,10 @@ const authMiddleware = (req, res, next) => {
     req.userId = decoded.userId; // Attach userId to request
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Invalid token' });
-  }
+    return res.status(401).json({
+      message: 'Invalid token',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });  }
 };
 
 module.exports = authMiddleware;

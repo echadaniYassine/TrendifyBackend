@@ -4,6 +4,7 @@ const { generateToken } = require('../services/jwtService');
 const jwt = require('jsonwebtoken'); // Add this line
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const mongoose = require("mongoose");
 
 let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -61,6 +62,13 @@ exports.login = async (req, res) => {
     const token = generateToken(user._id);
     console.log('Generated Token:', token); // Debug: Ensure token is generated correctly
 
+    // Set cookie with token
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Only send cookie over HTTPS in production
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
+    });
     // Respond with token
     return res.status(200).json({
       message: 'Login successful, have fun!',
@@ -84,18 +92,20 @@ exports.getUserInfo = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.userId;
 
-    const user = await User.findById(userId, 'username email phoneNumber recoveryEmail recoveryPhoneNumber profilePhoto');
+    // Fetch user and include shippingAddresses in the response
+    const user = await User.findById(userId,'username email phoneNumber recoveryEmail recoveryPhoneNumber profilePhoto shippingAddresses _id'
+    );
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     return res.status(200).json({
+      _id: user._id, // Include the _id in the response
       username: user.username,
       email: user.email,
       phoneNumber: user.phoneNumber,
-      password: user.password
-      
+      shippingAddresses: user.shippingAddresses,  // Add shippingAddresses to the response
     });
   } catch (error) {
     console.error('Error fetching user information:', error);
@@ -103,41 +113,59 @@ exports.getUserInfo = async (req, res) => {
   }
 };
 
-
-
-
 exports.modifyUser = async (req, res) => {
-  const {
-    username,
-    email,
-    phoneNumber,
-    password
-  } = req.body;
+  const token = req.headers.authorization?.split(' ')[1]; // Get token from the Authorization header
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
 
   try {
-    // Find the user by either email or phone number
-    const user = await User.findOne({email});
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    // Check if the user ID from the token is valid
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
     }
 
-    // Update fields if they are provided
-    if (username) user.username = username;
-    if (email) user.email = email;
-    if (phoneNumber) user.phoneNumber = phoneNumber;
-    // If password is provided, hash it and update
+    // Prepare data for update
+    const { username, email, phoneNumber, password, shippingAddresses } = req.body;
+    const updatedData = {};
+
+    if (username) updatedData.username = username;
+    if (email) updatedData.email = email;
+    if (phoneNumber) updatedData.phoneNumber = phoneNumber;
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      user.password = hashedPassword;
+      updatedData.password = hashedPassword;
+    }
+    if (shippingAddresses) {
+      updatedData.shippingAddresses = shippingAddresses;
     }
 
-    // Save updated user data
-    await user.save();
-    return res.status(200).json({ message: 'User information updated successfully' });
+    // Update the user in the database
+    const user = await User.findByIdAndUpdate(userId, updatedData, { new: true });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      message: "User information updated successfully",
+      user: {
+        username: user.username,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        shippingAddresses: user.shippingAddresses,
+      },
+    });
   } catch (error) {
-    console.error('Error modifying user:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    console.error("Error modifying user:", error);
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+    res.status(500).json({ message: "Failed to update user", error: error.message });
   }
 };
 
@@ -227,5 +255,150 @@ exports.resetPassword = async (req, res) => {
   } catch (error) {
     console.error('Error resetting password:', error);
     res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+exports.logout = async (req, res) => {
+  res.cookie('token', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 0
+  });
+  
+  return res.status(200).json({ message: 'Logged out successfully' });
+};
+// Add a shipping address to the user's profile
+exports.addShippingAddress = async (req, res) => {
+  try {
+    const { addressLine1, city, country, postalCode } = req.body;
+
+    // Validate that all address fields are provided
+    if (!addressLine1 || !city || !country || !postalCode) {
+      return res.status(400).json({ message: "All address fields are required" });
+    }
+
+    // Extract token from Authorization header
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    // Decode the token to get the user ID
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
+    // Find the user in the database
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Add the new address to the user's shipping addresses
+    user.shippingAddresses.push({ addressLine1, city, country, postalCode });
+    await user.save();
+
+    return res.status(200).json({
+      message: "Shipping address added successfully",
+      shippingAddresses: user.shippingAddresses,
+    });
+  } catch (error) {
+    console.error("Error adding shipping address:", error.message);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Update an existing shipping address
+exports.updateShippingAddress = async (req, res) => {
+  const { index, updatedAddress } = req.body;
+  const token = req.headers.authorization?.split(" ")[1]; // Extract token from Authorization header
+
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  if (!updatedAddress || Object.values(updatedAddress).some(field => !field)) {
+    return res.status(400).json({ message: "All address fields are required" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
+    // Fetch the user from the database
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Ensure the index is valid
+    if (index < 0 || index >= user.shippingAddresses.length) {
+      return res.status(400).json({ message: "Invalid index" });
+    }
+
+    // Update the address at the given index
+    user.shippingAddresses[index] = updatedAddress;
+    await user.save();
+
+    return res.status(200).json({
+      message: "Shipping address updated successfully",
+      shippingAddresses: user.shippingAddresses,
+    });
+  } catch (error) {
+    console.error("Error updating shipping address:", error.message);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Fetch all shipping addresses for a user
+exports.getAdresses = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1]; // Extract token
+
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
+    // Fetch the user from the database
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ shippingAddresses: user.shippingAddresses });
+  } catch (error) {
+    console.error("Error fetching shipping addresses:", error.message);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Delete a shipping address by value
+exports.deleteShippingAddress = async (req, res) => {
+  const { address } = req.params;
+
+  try {
+    // Get the user ID from the request user object
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User  not found" });
+    }
+
+    // Filter out the address to delete
+    user.shippingAddresses = user.shippingAddresses.filter(
+      existingAddress => existingAddress.addressLine1 !== address // Ensure you match the address correctly
+    );
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Address deleted successfully",
+      shippingAddresses: user.shippingAddresses,
+    });
+  } catch (error) {
+    console.error("Error deleting address:", error.message);
+    return res.status(500).json({ message: "Server error" });
   }
 };

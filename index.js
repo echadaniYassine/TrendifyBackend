@@ -8,6 +8,8 @@ const helmet = require('helmet');
 const cors = require('cors'); 
 const dotenv = require('dotenv');
 const connectDB = require("./config/db");
+const paymentRoutes = require('./routes/paymentRoutes');
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
@@ -23,6 +25,7 @@ connectDB();
 // Security middleware
 app.use(helmet());
 app.use(express.json());
+app.use(cookieParser()); // For parsing cookies
 
 // Enable CORS
 app.use(cors({
@@ -37,6 +40,8 @@ app.use('/api/Trendify/Products', routerProduct);
 app.use('/api/Trendify/Category', routerCategory);
 app.use('/api/Trendify/Admin', routerAdmin);
 app.use('/api/Trendify/orders', orderRouter);
+app.use('/api/payments', paymentRoutes);
+
 
 // Handle 404 errors
 app.use((req, res) => {
