@@ -33,6 +33,10 @@ app.use(cors({
 }));
 
 // Define your routes
+app.get('/', (req, res) => {
+  res.send('Welcome to the API!');
+});
+
 app.use('/api/Trendify', userRoutes);
 app.use('/api/Trendify/Products', routerProduct);
 app.use('/api/Trendify/Category', routerCategory);
