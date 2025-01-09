@@ -9,6 +9,7 @@ yarn.lock
 /dist/
 build/
 
+# Environment Files
 .env
 .env.local
 .env.*.local
