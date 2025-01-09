@@ -1,8 +1,8 @@
 
 const CategoriesData = [
-    { categoryName: "All", img: "/assets/categoryimg/all.png", subcategories: [] },
-    { categoryName: "Men", img: "/assets/categoryimg/man.png", subcategories: ["Hoodies", "Jackets", "Shirts", "Pants"] },
-    { categoryName: "Women", img: "/assets/categoryimg/women.png", subcategories: ["Hoodies", "Jackets", "Shirts", "Pants"] },
+    { categoryName: "All", img: "/assets/categoryimg/allCategories.png", subcategories: [] },
+    { categoryName: "Men", img: "/assets/categoryimg/menCategories.png", subcategories: ["Hoodies", "Jackets", "Shirts", "Pants"] },
+    { categoryName: "Women", img: "/assets/categoryimg/womenCategories.png", subcategories: ["Hoodies", "Jackets", "Shirts", "Pants"] },
   ];
 
 module.exports = CategoriesData;

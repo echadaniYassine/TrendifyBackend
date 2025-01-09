@@ -4,7 +4,16 @@ const Category = require('../models/Categories');
 const ProductsData = require('../data/ProductsData'); // Correct path for Products data
 const CategoriesData = require('../data/CategoriesData'); // Correct path for Categories data
 
-const connectDB = require('./db'); // Import the shared DB connection function
+// MongoDB connection
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('Failed to connect to MongoDB:', error.message);
+    process.exit(1); // Exit the process with failure
+  }
+};
 
 const insertData = async () => {
   try {
@@ -30,10 +39,6 @@ const insertData = async () => {
     }
   } catch (error) {
     console.error('Error inserting data:', error);
-  } finally {
-    // Close the connection after the operation
-    await mongoose.disconnect();
-    console.log('Disconnected from MongoDB.');
   }
 };
 

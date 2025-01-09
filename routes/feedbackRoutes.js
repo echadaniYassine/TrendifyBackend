@@ -11,6 +11,6 @@ router.post('/submit-feedback', authMiddleware, submitFeedback);
 router.get('/get-feedbacks-user', authMiddleware, getUserFeedback);
 
 // Route for getting all feedback for a product
-router.get('/get-all-feedbackes/:productId', authMiddleware, getAllFeedback); // Corrected to use path parameter :productId
+router.get('/get-all-feedbackes/:productId', getAllFeedback); // Corrected to use path parameter :productId
 
 module.exports = router;

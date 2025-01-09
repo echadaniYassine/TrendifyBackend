@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const insertData = require('./insertData')
 // MongoDB connection
 const connectDB = async () => {
   try {
@@ -10,5 +10,6 @@ const connectDB = async () => {
     process.exit(1); // Exit the process with failure
   }
 };
+insertData();
 
 module.exports = connectDB;
