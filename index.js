@@ -27,7 +27,17 @@ app.use(cookieParser()); // For parsing cookies
 
 // Enable CORS (consider removing this if defined in `vercel.json`)
 app.use(cors({
-  origin: 'http://localhost:3000', // Allow requests from this origin
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:3000', // Local development
+      'https://trendify-frontend-nine.vercel.app' // Deployed frontend
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'], // Allowed HTTP methods
   credentials: true // Allow cookies and credentials
 }));
