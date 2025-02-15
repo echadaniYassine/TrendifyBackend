@@ -271,29 +271,33 @@ exports.logout = async (req, res) => {
   return res.status(200).json({ message: 'Logged out successfully' });
 };
 
-// Example of an email subscription endpoint
+
 exports.subscribe = async (req, res) => {
   const { email } = req.body;
 
-  // Use your email service to send the subscription email
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: process.env.EMAIL_USER, // Your Gmail address
-      pass: process.env.EMAIL_PASSWORD, // Your App Password
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
+  if (!email) {
+    return res.status(400).json({ message: "Email is required." });
+  }
 
-  const mailOptions = {
-    from: "OKY webcraft - Founder",
-    to: email,
-    subject: "🎉 Subscription Confirmation 🎉",
-    text: `Hello! 👋
+  try {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    const mailOptions = {
+      from: "OKY WebCraft - Founder",
+      to: email,
+      subject: "🎉 Subscription Confirmation 🎉",
+      text: `Hello! 👋
 
 Thank you so much for subscribing to our newsletter! 💌 We're super excited to have you on board! 🌟
 
@@ -303,15 +307,15 @@ Stay tuned and feel free to reach out if you need anything! 😄💬
 
 Cheers, 
 The OKY Team 💻`
+    };
 
-  };
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "Successfully subscribed" });
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return res.status(500).send("Failed to subscribe.");
-    }
-    res.status(200).send("Successfully subscribed.");
-  });
+  } catch (error) {
+    console.error("Subscription Email Error:", error);
+    res.status(500).json({ message: "Failed to subscribe." });
+  }
 };
 
 // Add a shipping address to the user's profile
