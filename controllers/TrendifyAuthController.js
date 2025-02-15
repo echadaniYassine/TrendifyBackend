@@ -268,6 +268,35 @@ exports.logout = async (req, res) => {
   
   return res.status(200).json({ message: 'Logged out successfully' });
 };
+
+// Example of an email subscription endpoint
+exports.subscribe = async (req, res) => {
+  const { email } = req.body;
+
+  // Use your email service to send the subscription email
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "okywebcraft@gmail.com",
+      pass: "yassine123",
+    },
+  });
+
+  const mailOptions = {
+    from: "your-email@gmail.com",
+    to: email,
+    subject: "Subscription Confirmation",
+    text: "Thank you for subscribing!",
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(500).send("Failed to subscribe.");
+    }
+    res.status(200).send("Successfully subscribed.");
+  });
+};
+
 // Add a shipping address to the user's profile
 exports.addShippingAddress = async (req, res) => {
   try {
