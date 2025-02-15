@@ -290,7 +290,7 @@ exports.subscribe = async (req, res) => {
   });
 
   const mailOptions = {
-    from: "okywebcraft@gmail.com",
+    from: "OKY webcraft - Founder",
     to: email,
     subject: "🎉 Subscription Confirmation 🎉",
     text: `Hello! 👋
