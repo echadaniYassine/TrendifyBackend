@@ -5,18 +5,20 @@ const jwt = require('jsonwebtoken'); // Add this line
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const mongoose = require("mongoose");
+const dotenv = require('dotenv');
+dotenv.config();
 
 let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-        user: 'yassinechadani113@gmail.com', // Your Gmail address
-        pass: 'mqimunubsdwzwbmw', // Your App Password
-    },
-    tls: {
-        rejectUnauthorized: false,
-    },
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 exports.register = async (req, res) => {
@@ -27,10 +29,10 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'User  already exists' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser  = new User({ username, email, phoneNumber, password: hashedPassword });
+    const newUser = new User({ username, email, phoneNumber, password: hashedPassword });
 
-    await newUser .save();
-    const token = generateToken(newUser ._id);
+    await newUser.save();
+    const token = generateToken(newUser._id);
     res.status(201).json({ token });
   } catch (error) {
     console.error('Error registering user:', error); // Log the error
@@ -81,7 +83,7 @@ exports.login = async (req, res) => {
 };
 
 exports.getUserInfo = async (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]; 
+  const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
     return res.status(401).json({ message: 'No token provided' });
@@ -93,7 +95,7 @@ exports.getUserInfo = async (req, res) => {
     const userId = decoded.userId;
 
     // Fetch user and include shippingAddresses in the response
-    const user = await User.findById(userId,'username email phoneNumber recoveryEmail recoveryPhoneNumber profilePhoto shippingAddresses _id'
+    const user = await User.findById(userId, 'username email phoneNumber recoveryEmail recoveryPhoneNumber profilePhoto shippingAddresses _id'
     );
 
     if (!user) {
@@ -175,45 +177,45 @@ exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   try {
-      const user = await User.findOne({ email });
-      if (!user) {
-          return res.status(404).json({ message: 'User not found' });
-      }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-      // Generate a random verification code
-      const verificationCode = Math.floor(100000 + Math.random() * 900000);
+    // Generate a random verification code
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
 
-      // Generate a secure token
-      const resetToken = crypto.randomBytes(20).toString('hex');
+    // Generate a secure token
+    const resetToken = crypto.randomBytes(20).toString('hex');
 
-      // Set the verification code and expiration time in the user document
-      user.verificationCode = verificationCode;
-      user.resetPasswordToken = resetToken; // Use crypto for generating the token
-      user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    // Set the verification code and expiration time in the user document
+    user.verificationCode = verificationCode;
+    user.resetPasswordToken = resetToken; // Use crypto for generating the token
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-      await user.save(); // Save changes to the database
+    await user.save(); // Save changes to the database
 
-      console.log('Generated token:', resetToken);
+    console.log('Generated token:', resetToken);
 
-      // Mail options for Nodemailer
-      const mailOptions = {
-          from: process.env.EMAIL, // Use environment variable for sender's email
-          to: email,
-          subject: 'Password Reset Verification Code',
-          text: `Dear User,\n\nYou have requested to reset your password. Here is your verification code: ${verificationCode}\n\n` +
-              `Your reset token is: ${resetToken}\n\n` +
-              `If you did not request this change, please ignore this email.\n\nBest regards,\nThe Support Team`,
-      };
+    // Mail options for Nodemailer
+    const mailOptions = {
+      from: process.env.EMAIL, // Use environment variable for sender's email
+      to: email,
+      subject: 'Password Reset Verification Code',
+      text: `Dear User,\n\nYou have requested to reset your password. Here is your verification code: ${verificationCode}\n\n` +
+        `Your reset token is: ${resetToken}\n\n` +
+        `If you did not request this change, please ignore this email.\n\nBest regards,\nThe Support Team`,
+    };
 
-      // Send the email
-      const info = await transporter.sendMail(mailOptions);
-      console.log('Email sent successfully:', info.response);
+    // Send the email
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully:', info.response);
 
-      return res.json({ message: 'Verification code sent successfully.', token: resetToken });
+    return res.json({ message: 'Verification code sent successfully.', token: resetToken });
 
   } catch (error) {
-      console.error('Error in forgot password process:', error);
-      return res.status(500).json({ message: 'Error in forgot password process.', error: error.message });
+    console.error('Error in forgot password process:', error);
+    return res.status(500).json({ message: 'Error in forgot password process.', error: error.message });
   }
 };
 
@@ -265,7 +267,7 @@ exports.logout = async (req, res) => {
     sameSite: 'strict',
     maxAge: 0
   });
-  
+
   return res.status(200).json({ message: 'Logged out successfully' });
 };
 
@@ -275,18 +277,33 @@ exports.subscribe = async (req, res) => {
 
   // Use your email service to send the subscription email
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
-      user: "okywebcraft@gmail.com",
-      pass: "yassine123",
+      user: process.env.EMAIL_USER, // Your Gmail address
+      pass: process.env.EMAIL_PASSWORD, // Your App Password
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 
   const mailOptions = {
-    from: "your-email@gmail.com",
+    from: "okywebcraft@gmail.com",
     to: email,
-    subject: "Subscription Confirmation",
-    text: "Thank you for subscribing!",
+    subject: "🎉 Subscription Confirmation 🎉",
+    text: `Hello! 👋
+
+Thank you so much for subscribing to our newsletter! 💌 We're super excited to have you on board! 🌟
+
+Get ready to receive exciting updates, news, and special offers just for you! 🎁✨
+
+Stay tuned and feel free to reach out if you need anything! 😄💬
+
+Cheers, 
+The OKY Team 💻`
+
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
