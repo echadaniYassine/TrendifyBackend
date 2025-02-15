@@ -294,7 +294,7 @@ exports.subscribe = async (req, res) => {
     });
 
     const mailOptions = {
-      from: "OKY WebCraft - Founder",
+      from: `"OKY WebCraft - Founder" <${process.env.EMAIL_USER}>` ,
       to: email,
       subject: "🎉 Subscription Confirmation 🎉",
       text: `Hello! 👋
